@@ -20,46 +20,38 @@ end
 
 puts "Which account would u you like to get emails from, no spaces."
 account = gets.downcase
+#search for most recent tweet
 timeline = Twitter.user_timeline(account)
 
 puts timeline.length
 
 firsttweetid = timeline[0].id
-
+#email the most recent tweet
 puts firsttweetid
 
 timeline = Twitter.user_timeline(account)
 
+x = 1
+
 secondtweetid = timeline[0].id
-
+puts secondtweetid
+while x == 1 
+#if the most recent tweet is not the same as the most recent when we checked b4, send it, otherwise dont send
 if firsttweetid != secondtweetid
-  puts secondtweetid
-else
-  puts "hasn't tweeted since we last checked"
+     tweetstatus = secondtweetid.text
+     Pony.mail({
+          :to => email_address,
+          :via => :smtp,
+          :subject => "#{account} tweeted",
+          :body => tweetstatus,
+        :address              => 'smtp.gmail.com',
+          :port                 => '587',
+          :enable_starttls_auto => true,
+          :user_name            => 'allieshaber',
+          :password             => 'ahaber1315',
+        :authentication       => :plain, # :plain, :login, :cram_md5, no auth by default
+          :domain               => "localhost.localdomain" # the HELO domain provided by the client to the server
+          })
 end
-
-#timeline.each do |tweet|
-#	   tweetid = tweet.id
-#	   tweetstatus = tweet.text
-#		 Pony.mail({
- # 				:to => email_address,
-  #				:via => :smtp,
-  #				:subject => "#{account} tweeted",
-  #				:body => tweetstatus,
-  ## 			:address              => 'smtp.gmail.com',
-    #			:port                 => '587',
-    #			:enable_starttls_auto => true,
-    #			:user_name            => 'allieshaber',
-    #			:password             => 'ahaber1315',
-    #			:authentication       => :plain, # :plain, :login, :cram_md5, no auth by default
-    #			:domain               => "localhost.localdomain" # the HELO domain provided by the client to the server
-  	#			}} )
-		#sleep(10)
-#end
-
-# email the tweet , use if ___ tweets something email these people,
-# elsif ___ tweets something, email these people
-
-
-#sleep 10
-
+sleep 10
+end
