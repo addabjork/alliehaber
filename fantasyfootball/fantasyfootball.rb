@@ -1,24 +1,5 @@
-
-Allie's players:
-
-players = [ "Aaron Rodgers", 
-
-"Cam Newton, 
-Christian Ponder
-Adrian Peterson
-Marshawn Lynch
-Doug Martin
-Alfred Morris
-Brandon Marshal
-Reggie Wayne
-Ws Welker
-Victor Cruz
-
-{
-	:name => , :position =>, :nfl_team =>, :stats => {
-		:touchdowns =>
-	}
-}
+require 'nokogiri'
+require 'open-uri'
 
 class FootballPlayer
 	attr_accessor :position, :stats, :name, :nfl_team, :id
@@ -36,3 +17,12 @@ players = [{:name => "Aaron Rodgers", :position => "QB", :nfl_team => "Green Bay
 {:name => "Wes Welker", :position => "WR", :nfl_team => "Denver Broncos", :id => "5941"},
 {:name => "Victor Cruz", :position => "WR", :nfl_team => "New York Giants", :id => "13553"}
  ]
+
+playerone = players[0]
+playerone_id = playerone[:id]
+
+espn_url = "http://espn.go.com/nfl/player/_/id/#{playerone_id}"
+
+doc = Nokogiri::HTML(open(espn_url))
+
+puts doc
