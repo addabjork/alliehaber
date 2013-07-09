@@ -29,14 +29,12 @@ firsttweetid = timeline[0].id
 #email the most recent tweet
 puts firsttweetid
 
-timeline = Twitter.user_timeline(account)
 
 x = 1
 
-secondtweetid = timeline[0].id
-puts secondtweetid
 while x == 1 
   timeline = Twitter.user_timeline(account)
+
 #if the most recent tweet is not the same as the most recent when we checked b4, send it, otherwise dont send
 if firsttweetid != secondtweetid
      tweetstatus = secondtweetid.text
@@ -53,6 +51,8 @@ if firsttweetid != secondtweetid
         :authentication       => :plain, # :plain, :login, :cram_md5, no auth by default
           :domain               => "localhost.localdomain" # the HELO domain provided by the client to the server
           })
+else
+  puts "nothing here"
 end
 sleep 10
 end

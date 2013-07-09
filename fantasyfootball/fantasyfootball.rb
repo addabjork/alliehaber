@@ -5,6 +5,7 @@ class FootballPlayer
 	attr_accessor :position, :stats, :name, :nfl_team, :id
 
 end
+
 players = [{:name => "Aaron Rodgers", :position => "QB", :nfl_team => "Green Bay Packers", :id => "8439"},
 {:name => "Cam Newton", :position => "QB", :nfl_team => "Carolina Panthers", :id => "13994"},
 {:name => "Christian Ponder", :position => "QB", :nfl_team => "Minnesota Vikings", :id => "13966"},
@@ -18,11 +19,18 @@ players = [{:name => "Aaron Rodgers", :position => "QB", :nfl_team => "Green Bay
 {:name => "Victor Cruz", :position => "WR", :nfl_team => "New York Giants", :id => "13553"}
  ]
 
+
+def rus
 playerone = players[0]
 playerone_id = playerone[:id]
+#puts playerone_id
 
 espn_url = "http://espn.go.com/nfl/player/_/id/#{playerone_id}"
 
-doc = Nokogiri::HTML(open(espn_url))
+doc = Nokogiri::HTML(open("#{espn_url}"))
 
-puts doc
+doc.css('tr.oddrow:nth-child(2) td:nth-child(4)').each do |link|
+  puts link.content
+end
+
+
