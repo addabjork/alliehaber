@@ -15,8 +15,8 @@ Twitter.configure do |config|
   config.oauth_token_secret = "IIQz4iuTy6d0vbgRdWrkZpkeQi8kdNg0pmdhOI0ui9Y"
 end
 
-#puts "Input your email address"
-#email_address = gets.chomp
+puts "Input your email address"
+email_address = gets.chomp
 
 puts "Which account would u you like to get emails from, no spaces."
 account = gets.downcase
@@ -36,6 +36,7 @@ x = 1
 secondtweetid = timeline[0].id
 puts secondtweetid
 while x == 1 
+  timeline = Twitter.user_timeline(account)
 #if the most recent tweet is not the same as the most recent when we checked b4, send it, otherwise dont send
 if firsttweetid != secondtweetid
      tweetstatus = secondtweetid.text
