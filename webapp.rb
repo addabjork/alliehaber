@@ -34,8 +34,6 @@ x = 1
 
 while x == 1 
   timeline = Twitter.user_timeline(account)
-  secondtweetid = timeline[0].id
-  puts secondtweetid
 
 #if the most recent tweet is not the same as the most recent when we checked b4, send it, otherwise dont send
 if firsttweetid != secondtweetid

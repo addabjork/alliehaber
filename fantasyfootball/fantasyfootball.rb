@@ -21,6 +21,10 @@ Victor Cruz
 }
 
 class FootballPlayer
-	attr_accessor :position, :stats, :name, :nfl_team
+	attr_accessor :position, :stats, :name, :nfl_team, :id
 
 end
+players = [
+	{:name => "Aaron Rodgers", :position => "QB", :nfl_team => "Green Bay Packers", :id => "8439"},
+	{:name => "", :position => "QB", :nfl_team => "", :id => ""} 
+]
