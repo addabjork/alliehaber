@@ -1,4 +1,3 @@
-#Require nokogiri
 require 'nokogiri'
 require 'open-uri'
 
@@ -18,44 +17,127 @@ players = [{:name => "Aaron Rodgers", :position => "QB", :nfl_team => "Green Bay
 class FootballPlayer
 	attr_accessor :position, :stats, :name, :nfl_team, :id, :rushyards
 
-def rushingyards
-	player_id = self.id
+def tellpassyards(player, passingyards)
+	role = player[:position]
+	puts role
+	if role == "QB"
+		puts "#{player[:name]} has #{passingyards} passing yards"
+	else
+		puts "not a quarter back"
+	end
+end
 
-	espn_url = "http://espn.go.com/nfl/player/_/id/#{player_id}"
+def getpassingyards(position, players)
+	player = players[position]
+	players_id = player[:id]
+
+	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
 
 	doc = Nokogiri::HTML(open("#{espn_url}"))
 
 	doc.css('tr.oddrow:nth-child(2) td:nth-child(4)').each do |data|
- 		self.rushyards = data.content
+ 		@passingyards = data.content 
 	end
 
+	puts "lalal #{@passingyards}"
+	
+	tellpassyards(player, @passingyards)
+end
+
+def tellrushyards(player, rushingyards)
+	role = player[:position]
+	puts role
+	if player[:position] == "RB"
+		puts "#{player[:name]} has #{rushingyards} rushing yards"
+	else
+		puts "not a running back"
+	end
+end
+
+def getrushyards(position, players)
+	player = players[position]
+	players_id = player[:id]
+
+	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
+
+	doc = Nokogiri::HTML(open("#{espn_url}"))
+
+	doc.css('tr.oddrow:nth-child(2) td:nth-child(3)').each do |data|
+ 		@rushingyards = data.content 
+	end
+
+	puts "lalal #{@rushingyards}"
+	
+	tellrushyards(player, @rushingyards)
+end
+def tellreceivingyardsrb(player, receivingyardsrb)
+	role = player[:position]
+	puts role
+	if player[:position] == "RB"
+		puts "#{player[:name]} has #{receivingyardsrb} receiving yards"
+	else
+		puts "not a running"
+	end
+end
+
+def getreceivingyardsrb(position, players)
+	player = players[position]
+	players_id = player[:id]
+
+	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
+
+	doc = Nokogiri::HTML(open("#{espn_url}"))
+
+	doc.css('tr.oddrow:nth-child(2) td:nth-child(9)').each do |data|
+ 		@receivingyardsrb = data.content 
+	end
+
+	puts "lalal #{@receivingyardsrb}"
+	
+	tellreceivingyardsrb(player, @receivingyardsrb)
 end
 
 
-def tellusyards
-	newplayers = []
-	puts self.inspect
-	#players.each do |player|
-		if self.position == "QB"
-			self.rushingyards
-			newplayers << self
-			puts newplayers.inspect
-			puts "#{self.name} rushed #{self.rushyards} yards"
-		else
-			newplayers << self
-			puts newplayers.inspect
-			puts "#{self.name} is not a qb"
-		end
-	#end
+def tellreceivingyardswr(player, receivingyardswr)
+	role = player[:position]
+	puts role
+	if player[:position] == "WR"
+		puts "#{player[:name]} has #{receivingyardswr} receiving yards"
+	else
+		puts "not a receiver"
+	end
 end
 
+def getreceivingyardswr(position, players)
+	player = players[position]
+	players_id = player[:id]
+
+	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
+
+	doc = Nokogiri::HTML(open("#{espn_url}"))
+
+	doc.css('tr.oddrow:nth-child(2) td:nth-child(4)').each do |data|
+ 		@receivingyardswr = data.content 
+
+	end
+
+	puts "lalal #{@receivingyardswr}"
+	
+	tellreceivingyardswr(player, @receivingyardswr)
 end
 
-aaron = FootballPlayer.new
-aaron.name = "Aaron Rodgers"
-aaron.position = "QB"
-aaron.nfl_team = "Green Bay Packers"
-aaron.id ="8439"
-
-aaron.tellusyards
-
+getpassingyards(0, players)
+getpassingyards(1, players)
+getpassingyards(2, players)
+getrushyards(3, players)
+getreceivingyardsrb(3, players)
+getrushyards(4, players)
+getreceivingyardsrb(4, players)
+getrushyards(5, players)
+getreceivingyardsrb(5, players)
+getrushyards(6, players)
+getreceivingyardsrb(6, players)
+getreceivingyardswr(7, players)
+getreceivingyardswr(8, players)
+getreceivingyardswr(9, players)
+getreceivingyardswr(10, players)
