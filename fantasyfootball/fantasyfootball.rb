@@ -4,6 +4,8 @@ require 'open-uri'
 class FootballPlayer
 	attr_accessor :position, :stats, :name, :nfl_team, :id
 
+
+
 end
 
 players = [{:name => "Aaron Rodgers", :position => "QB", :nfl_team => "Green Bay Packers", :id => "8439"},
@@ -21,129 +23,118 @@ players = [{:name => "Aaron Rodgers", :position => "QB", :nfl_team => "Green Bay
 
 
 
-
-def tellpassyards(player, passingyards)
-	role = player[:position]
-	puts role
-	if player[:position] == "QB"
-		puts "#{player[:name]} has #{passingyards} passing yards"
-	else
-		puts "not a quarter back"
-	end
-end
-
-def getpassingyards(position, players)
+def getdata(players, position)
 	player = players[position]
 	players_id = player[:id]
 
 	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
 
-	doc = Nokogiri::HTML(open("#{espn_url}"))
-
-	doc.css('tr.oddrow:nth-child(2) td:nth-child(4)').each do |data|
- 		@passingyards = data.content 
-
-	end
-
-	puts "lalal #{@passingyards}"
-	
-	tellpassyards(player, @passingyards)
-end
-def tellrushyards(player, rushingyards)
-	role = player[:position]
-	puts role
-	if player[:position] == "RB"
-		puts "#{player[:name]} has #{rushingyards} rushing yards"
-	else
-		puts "not a running back"
-	end
+	@doc = Nokogiri::HTML(open("#{espn_url}"))
 end
 
-def getrushyards(position, players)
+
+
+class FootballPlayer
+	def getdata(players, position)
 	player = players[position]
 	players_id = player[:id]
 
 	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
 
-	doc = Nokogiri::HTML(open("#{espn_url}"))
-
-	doc.css('tr.oddrow:nth-child(2) td:nth-child(3)').each do |data|
- 		@rushingyards = data.content 
-
-	end
-
-	puts "lalal #{@rushingyards}"
+	@doc = Nokogiri::HTML(open("#{espn_url}"))
+end
+end
 	
-	tellrushyards(player, @rushingyards)
-end
-def tellreceivingyardsrb(player, receivingyardsrb)
-	role = player[:position]
-	puts role
-	if player[:position] == "RB"
-		puts "#{player[:name]} has #{receivingyardsrb} receiving yards"
-	else
-		puts "not a running"
+class Quaterback
+	def tellpassyards(player, passingyards)
+		role = player[:position]
+		puts role
+			if role == "QB"
+				puts "#{player[:name]} has #{passingyards} passing yards"
+			else
+				puts "not a quarter back"
+			end
 	end
-end
+	def getpassingyards(position, players)
+		getdata(players, position)
 
-def getreceivingyardsrb(position, players)
-	player = players[position]
-	players_id = player[:id]
+		@doc.css('tr.oddrow:nth-child(2) td:nth-child(4)').each do |data|
+ 			@passingyards = data.content 
+ 		end
 
-	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
-
-	doc = Nokogiri::HTML(open("#{espn_url}"))
-
-	doc.css('tr.oddrow:nth-child(2) td:nth-child(9)').each do |data|
- 		@receivingyardsrb = data.content 
-
-	end
-
-	puts "lalal #{@receivingyardsrb}"
+			puts "lalal #{@passingyards}"
 	
-	tellreceivingyardsrb(player, @receivingyardsrb)
-end
-
-
-def tellreceivingyardswr(player, receivingyardswr)
-	role = player[:position]
-	puts role
-	if player[:position] == "WR"
-		puts "#{player[:name]} has #{receivingyardswr} receiving yards"
-	else
-		puts "not a receiver"
-	end
-end
-
-def getreceivingyardswr(position, players)
-	player = players[position]
-	players_id = player[:id]
-
-	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
-
-	doc = Nokogiri::HTML(open("#{espn_url}"))
-
-	doc.css('tr.oddrow:nth-child(2) td:nth-child(4)').each do |data|
- 		@receivingyardswr = data.content 
-
+			tellpassyards(player, @passingyards)
 	end
 
-	puts "lalal #{@receivingyardswr}"
+end
+
+class Runningback
+	def tellrushyards(player, rushingyards)
+		role = player[:position]
+		puts role
+			if role == "RB"
+				puts "#{player[:name]} has #{rushingyards} rushing yards"
+			else
+				puts "not a running back"
+			end
+	end
+	def getrushyards(position, players)
+		getdata(players, position)
+
+		@doc.css('tr.oddrow:nth-child(2) td:nth-child(3)').each do |data|
+ 			@rushingyards = data.content 
+ 		end
+
+		puts "lalal #{@rushingyards}"
 	
-	tellreceivingyardswr(player, @receivingyardswr)
+		tellrushyards(player, @rushingyards)
+	end
+
+	def tellreceivingyardsrb(player, receivingyardsrb)
+		role = player[:position]
+		puts role
+			if role == "RB"
+				puts "#{player[:name]} has #{receivingyardsrb} receiving yards"
+			else
+				puts "not a running"
+			end
+	end
+
+	def getreceivingyardsrb(position, players)
+		getdata(players, position)
+
+		@doc.css('tr.oddrow:nth-child(2) td:nth-child(9)').each do |data|
+ 			@receivingyardsrb = data.content 
+ 		end
+
+			puts "lalal #{@receivingyardsrb}"
+		
+			tellreceivingyardsrb(player, @receivingyardsrb)
+	end
 end
-getpassingyards(0, players)
-getpassingyards(1, players)
-getpassingyards(2, players)
-getrushyards(3, players)
-getreceivingyardsrb(3, players)
-getrushyards(4, players)
-getreceivingyardsrb(4, players)
-getrushyards(5, players)
-getreceivingyardsrb(5, players)
-getrushyards(6, players)
-getreceivingyardsrb(6, players)
-getreceivingyardswr(7, players)
-getreceivingyardswr(8, players)
-getreceivingyardswr(9, players)
-getreceivingyardswr(10, players)
+
+class Receivers
+	def tellreceivingyardswr(player, receivingyardswr)
+		role = player[:position]
+		puts role
+			if role == "WR"
+				puts "#{player[:name]} has #{receivingyardswr} receiving yards"
+			else
+				puts "not a receiver"
+			end
+end
+
+	def getreceivingyardswr(position, players)
+		getdata(players, position)
+
+		@doc.css('tr.oddrow:nth-child(2) td:nth-child(4)').each do |data|
+ 			@receivingyardswr = data.content 
+ 		end
+
+			puts "lalal #{@receivingyardswr}"
+	
+			tellreceivingyardswr(player, @receivingyardswr)
+	end	
+
+end
