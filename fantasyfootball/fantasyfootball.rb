@@ -1,12 +1,6 @@
 require 'nokogiri'
 require 'open-uri'
 
-class FootballPlayer
-	attr_accessor :position, :stats, :name, :nfl_team, :id
-
-
-
-end
 
 players = [{:name => "Aaron Rodgers", :position => "QB", :nfl_team => "Green Bay Packers", :id => "8439"},
 {:name => "Cam Newton", :position => "QB", :nfl_team => "Carolina Panthers", :id => "13994"},
@@ -22,41 +16,29 @@ players = [{:name => "Aaron Rodgers", :position => "QB", :nfl_team => "Green Bay
  ]
 
 
+class FootballPlayer 
+	attr_accessor :position, :stats, :name, :nfl_team, :id
 
-def getdata(players, position)
-	player = players[position]
-	players_id = player[:id]
-
+	def getdata
+	players_id = self.id
 	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
-
 	@doc = Nokogiri::HTML(open("#{espn_url}"))
-end
-
-
-
-class FootballPlayer
-	def getdata(players, position)
-	player = players[position]
-	players_id = player[:id]
-
-	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
-
-	@doc = Nokogiri::HTML(open("#{espn_url}"))
-end
+	puts self.name
+	end
 end
 	
-class Quaterback
+class Quarterback < FootballPlayer
 	def tellpassyards(player, passingyards)
-		role = player[:position]
+		role = self.position
 		puts role
 			if role == "QB"
-				puts "#{player[:name]} has #{passingyards} passing yards"
+				puts "#{self.name} has #{passingyards} passing yards"
 			else
 				puts "not a quarter back"
 			end
 	end
-	def getpassingyards(position, players)
-		getdata(players, position)
+	def getpassingyards
+		self.getdata
 
 		@doc.css('tr.oddrow:nth-child(2) td:nth-child(4)').each do |data|
  			@passingyards = data.content 
@@ -64,12 +46,12 @@ class Quaterback
 
 			puts "lalal #{@passingyards}"
 	
-			tellpassyards(player, @passingyards)
+			self.tellpassyards(player, @passingyards)
 	end
 
 end
 
-class Runningback
+class Runningback < FootballPlayer
 	def tellrushyards(player, rushingyards)
 		role = player[:position]
 		puts role
@@ -114,7 +96,7 @@ class Runningback
 	end
 end
 
-class Receivers
+class Receivers < FootballPlayer
 	def tellreceivingyardswr(player, receivingyardswr)
 		role = player[:position]
 		puts role
