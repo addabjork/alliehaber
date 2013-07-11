@@ -1,6 +1,7 @@
 require 'nokogiri'
 require 'open-uri'
 
+
 players = [{:name => "Aaron Rodgers", :position => "QB", :nfl_team => "Green Bay Packers", :id => "8439"},
 {:name => "Cam Newton", :position => "QB", :nfl_team => "Carolina Panthers", :id => "13994"},
 {:name => "Christian Ponder", :position => "QB", :nfl_team => "Minnesota Vikings", :id => "13966"},
@@ -14,130 +15,51 @@ players = [{:name => "Aaron Rodgers", :position => "QB", :nfl_team => "Green Bay
 {:name => "Victor Cruz", :position => "WR", :nfl_team => "New York Giants", :id => "13553"}
  ]
 
+
 class FootballPlayer
-	attr_accessor :position, :stats, :name, :nfl_team, :id, :rushyards
+	attr_accessor :position, :stats, :name, :nfl_team, :id
 
-def tellpassyards(player, passingyards)
-	role = player[:position]
-	puts role
-	if role == "QB"
-		puts "#{player[:name]} has #{passingyards} passing yards"
-	else
-		puts "not a quarter back"
+	def getdata
+		players_id = self.id
+		espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
+		@doc = Nokogiri::HTML(open("#{espn_url}"))
+		puts self.name
 	end
 end
-
-def getpassingyards(position, players)
-	player = players[position]
-	players_id = player[:id]
-
-	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
-
-	doc = Nokogiri::HTML(open("#{espn_url}"))
-
-	doc.css('tr.oddrow:nth-child(2) td:nth-child(4)').each do |data|
- 		@passingyards = data.content 
-	end
-
-	puts "lalal #{@passingyards}"
 	
-	tellpassyards(player, @passingyards)
-end
+class Quarterback < FootballPlayer
 
-def tellrushyards(player, rushingyards)
-	role = player[:position]
-	puts role
-	if player[:position] == "RB"
-		puts "#{player[:name]} has #{rushingyards} rushing yards"
-	else
-		puts "not a running back"
+	def tellpassyards
+		role = self.position
+		puts role
+		if role == "QB"
+			puts "#{self.name} has #{@passingyards} passing yards"
+		else
+			puts "not a quarter back"
+		end
 	end
-end
-
-def getrushyards(position, players)
-	player = players[position]
-	players_id = player[:id]
-
-	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
-
-	doc = Nokogiri::HTML(open("#{espn_url}"))
-
-	doc.css('tr.oddrow:nth-child(2) td:nth-child(3)').each do |data|
- 		@rushingyards = data.content 
-	end
-
-	puts "lalal #{@rushingyards}"
 	
-	tellrushyards(player, @rushingyards)
-end
-def tellreceivingyardsrb(player, receivingyardsrb)
-	role = player[:position]
-	puts role
-	if player[:position] == "RB"
-		puts "#{player[:name]} has #{receivingyardsrb} receiving yards"
-	else
-		puts "not a running"
-	end
-end
+	def getpassingyards
+		self.getdata
 
-def getreceivingyardsrb(position, players)
-	player = players[position]
-	players_id = player[:id]
+		@doc.css('tr.oddrow:nth-child(2) td:nth-child(4)').each do |data|
+ 			@passingyards = data.content 
+ 		end
 
-	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
-
-	doc = Nokogiri::HTML(open("#{espn_url}"))
-
-	doc.css('tr.oddrow:nth-child(2) td:nth-child(9)').each do |data|
- 		@receivingyardsrb = data.content 
-	end
-
-	puts "lalal #{@receivingyardsrb}"
+		puts "lalal #{@passingyards}"
 	
-	tellreceivingyardsrb(player, @receivingyardsrb)
-end
-
-
-def tellreceivingyardswr(player, receivingyardswr)
-	role = player[:position]
-	puts role
-	if player[:position] == "WR"
-		puts "#{player[:name]} has #{receivingyardswr} receiving yards"
-	else
-		puts "not a receiver"
-	end
-end
-
-def getreceivingyardswr(position, players)
-	player = players[position]
-	players_id = player[:id]
-
-	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
-
-	doc = Nokogiri::HTML(open("#{espn_url}"))
-
-	doc.css('tr.oddrow:nth-child(2) td:nth-child(4)').each do |data|
- 		@receivingyardswr = data.content 
-
+		self.tellpassyards
 	end
 
-	puts "lalal #{@receivingyardswr}"
-	
-	tellreceivingyardswr(player, @receivingyardswr)
 end
 
-getpassingyards(0, players)
-getpassingyards(1, players)
-getpassingyards(2, players)
-getrushyards(3, players)
-getreceivingyardsrb(3, players)
-getrushyards(4, players)
-getreceivingyardsrb(4, players)
-getrushyards(5, players)
-getreceivingyardsrb(5, players)
-getrushyards(6, players)
-getreceivingyardsrb(6, players)
-getreceivingyardswr(7, players)
-getreceivingyardswr(8, players)
-getreceivingyardswr(9, players)
-getreceivingyardswr(10, players)
+aaron = Quarterback.new
+aaron.name = "Aaron Rodgers"
+aaron.position = "QB"
+aaron.id = "8439"
+aaron.nfl_team = "Green Bay Packers"
+
+aaron.getdata
+aaron.getpassingyards
+
+puts aaron.inspect
