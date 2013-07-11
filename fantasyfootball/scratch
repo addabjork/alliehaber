@@ -1,0 +1,71 @@
+
+class Runningback < FootballPlayer
+	def tellrushyards(player, rushingyards)
+		role = player[:position]
+		puts role
+			if role == "RB"
+				puts "#{player[:name]} has #{rushingyards} rushing yards"
+			else
+				puts "not a running back"
+			end
+	end
+	def getrushyards(position, players)
+		getdata(players, position)
+
+		@doc.css('tr.oddrow:nth-child(2) td:nth-child(3)').each do |data|
+ 			@rushingyards = data.content 
+ 		end
+
+		puts "lalal #{@rushingyards}"
+	
+		tellrushyards(player, @rushingyards)
+	end
+
+	def tellreceivingyardsrb(player, receivingyardsrb)
+		role = player[:position]
+		puts role
+			if role == "RB"
+				puts "#{player[:name]} has #{receivingyardsrb} receiving yards"
+			else
+				puts "not a running"
+			end
+	end
+
+	def getreceivingyardsrb(position, players)
+		getdata(players, position)
+
+		@doc.css('tr.oddrow:nth-child(2) td:nth-child(9)').each do |data|
+ 			@receivingyardsrb = data.content 
+ 		end
+
+			puts "lalal #{@receivingyardsrb}"
+		
+			tellreceivingyardsrb(player, @receivingyardsrb)
+	end
+end
+
+class Receivers < FootballPlayer
+	def tellreceivingyardswr(player, receivingyardswr)
+		role = player[:position]
+		puts role
+			if role == "WR"
+				puts "#{player[:name]} has #{receivingyardswr} receiving yards"
+			else
+				puts "not a receiver"
+			end
+end
+
+	def getreceivingyardswr(position, players)
+		getdata(players, position)
+
+		@doc.css('tr.oddrow:nth-child(2) td:nth-child(4)').each do |data|
+ 			@receivingyardswr = data.content 
+ 		end
+
+			puts "lalal #{@receivingyardswr}"
+	
+
+			tellreceivingyardswr(player, @receivingyardswr)
+	end	
+
+end

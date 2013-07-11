@@ -16,18 +16,20 @@ players = [{:name => "Aaron Rodgers", :position => "QB", :nfl_team => "Green Bay
  ]
 
 
-class FootballPlayer 
+
+class FootballPlayer
 	attr_accessor :position, :stats, :name, :nfl_team, :id
 
 	def getdata
-	players_id = self.id
-	espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
-	@doc = Nokogiri::HTML(open("#{espn_url}"))
-	puts self.name
+		players_id = self.id
+		espn_url = "http://espn.go.com/nfl/player/_/id/#{players_id}"
+		@doc = Nokogiri::HTML(open("#{espn_url}"))
+		puts self.name
 	end
 end
 	
 class Quarterback < FootballPlayer
+
 	def tellpassyards(player, passingyards)
 		role = self.position
 		puts role
@@ -37,6 +39,17 @@ class Quarterback < FootballPlayer
 				puts "not a quarter back"
 			end
 	end
+
+	def tellpassyards
+		role = self.position
+		puts role
+		if role == "QB"
+			puts "#{self.name} has #{@passingyards} passing yards"
+		else
+			puts "not a quarter back"
+		end
+	end
+	
 	def getpassingyards
 		self.getdata
 
@@ -44,9 +57,9 @@ class Quarterback < FootballPlayer
  			@passingyards = data.content 
  		end
 
-			puts "lalal #{@passingyards}"
+		puts "lalal #{@passingyards}"
 	
-			self.tellpassyards(player, @passingyards)
+		self.tellpassyards
 	end
 
 end
@@ -119,4 +132,45 @@ end
 			tellreceivingyardswr(player, @receivingyardswr)
 	end	
 
-end
+aaron = Quarterback.new
+aaron.name = "Aaron Rodgers"
+aaron.position = "QB"
+aaron.id = "8439"
+aaron.nfl_team = "Green Bay Packers"
+
+aaron.getdata
+aaron.getpassingyards
+
+puts aaron.inspect
+
+adrian = Runningback.new
+adrian.name = "Adrian Peterson"
+adrian.position = "RB"
+adrian.id = "10452"
+adrian.nfl_team = "Minnesota Vikings"
+
+adrian.getdata
+adrian.getrushyards
+adrian.getreceivingyardsrb
+
+puts adrian.inspect
+
+wes = Receiver.new
+wes.name = "Wes Welker"
+wes.position = "WR"
+wes.id = "5941"
+wes.nfl_team = "Denver Broncos"
+
+wes.getdata
+wes.getreceivingyardswr
+
+puts wes.inspect
+
+
+
+
+
+
+
+
+
