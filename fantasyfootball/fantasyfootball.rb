@@ -26,7 +26,7 @@ class FootballPlayer
 		id_url = "http://search.espn.go.com/#{self.name}/"
 		puts id_url
 		@doc = Nokogiri::HTML(open("#{id_url}"))
-		@doc.css('.span-5 .mod-smart-cart h3 a[href]').each do |data|
+		@doc.css('.span-5 .mod-smart-card h3 a[href]').each do |data|
 			@id = data.content.split("=")
 			puts @id
 			break
