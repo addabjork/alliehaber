@@ -2,40 +2,13 @@ require 'nokogiri'
 require 'open-uri'
 
 
-players = [{:name => "Aaron Rodgers", :position => "QB", :nfl_team => "Green Bay Packers", :id => "8439"},
-{:name => "Cam Newton", :position => "QB", :nfl_team => "Carolina Panthers", :id => "13994"},
-{:name => "Christian Ponder", :position => "QB", :nfl_team => "Minnesota Vikings", :id => "13966"},
-{:name => "Adrian Peterson", :position => "RB", :nfl_team => "Minnesota Vikings", :id => "10452"},
-{:name => "Marshawn Lynch", :position => "RB", :nfl_team => "Seattle Seahawks", :id => "10456"},
-{:name => "Doug Martin", :position => "RB", :nfl_team => "Tampa Bay Buccaneers", :id => "14885"},
-{:name => "Alfred Morris", :position => "RB", :nfl_team => "Washington Redskins", :id => "15009"},
-{:name => "Brandon Marshal", :position => "WR", :nfl_team => "Chicago Bears", :id => "9705"},
-{:name => "Reggie Wayne", :position => "WR", :nfl_team => "Indianapolis Colts", :id => "2578"},
-{:name => "Wes Welker", :position => "WR", :nfl_team => "Denver Broncos", :id => "5941"},
-{:name => "Victor Cruz", :position => "WR", :nfl_team => "New York Giants", :id => "13553"}
- ]
-
-
 
 class FootballPlayer
 
-	attr_accessor :position, :stats, :name, :nfl_team, :id
-
-	def getid
-		player_name = self.name
-		id_url = "http://search.espn.go.com/#{self.name}/"
-		puts id_url
-		@doc = Nokogiri::HTML(open("#{id_url}"))
-		@doc.css('.span-5 .mod-smart-card h3 a[href]').each do |data|
-			@id = data.content.split("=")
-			puts @id
-			break
-		end
-	end	
+	attr_accessor :position, :stats, :name, :nfl_team, :id, :url
 	
 	def getdata
-		players_id = self.id
-		espn_url = "http://espn.go.com/nfl/player/_/id/#{self.id}"
+		espn_url = self.url
 		@doc = Nokogiri::HTML(open("#{espn_url}"))
 
 		@doc.css('.mod-content h1').each do |data|
@@ -149,10 +122,61 @@ end
 	end	
 end
 
-aaron = Quarterback.new
-aaron.name = "aaron-rodgers"
+class FootballTeam
+	attr_accessor :players, :rosterurl, :name
+			
+	def getplayers
+		team_url = "http://espn.go.com/nfl/team/roster/_/name/dal/dallas-cowboys"
+		@doc = Nokogiri::HTML(open("#{team_url}"))
+		
+		
+		@players = []
+		
+		@doc.css('.mod-content tr td:nth-child(2)').each do |data|
+		#puts data
+			playerurl = data.css("a")[0]["href"]
+			playername = data.content
+			
+			if playername != "NAME"
+				newfootballplayer = FootballPlayer.new
+				newfootballplayer.name = playername
+				newfootballplayer.url = playerurl
+				newfootballplayer.getdata
+				puts newfootballplayer.name
+				puts newfootballplayer.position
+				puts newfootballplayer.nfl_team
+				@players << newfootballplayer
+			end
+			
+		end
+end 
 
-aaron.getid
+end
 
-puts aaron.inspect
-puts aaron.position
+class Application
+	attr_accessor :teams
+	def getallteams
+	
+			@teams = []
+			
+		league_url = "http://espn.go.com/nfl/teams"
+		@doc = Nokogiri::HTML(open("#{league_url}"))
+		@doc.css('.first .logo-nfl-medium-19 span:nth-child(2)').each do |data|
+			puts data
+			rosterurl = data.css("a")[2]["href"]
+			newurl = "http://espn.go.com" + rosterurl
+			
+				newfootballteam = FootballTeam.new
+				newfootballteam.url = newrurl
+				newfootballteam.getplayers
+				@teams << newfootballteam
+			
+			
+		end
+	end
+end
+
+
+fantasyfootball = Application.new
+fantasyfootball.getallteams
+puts fantasyfootball.teams	
