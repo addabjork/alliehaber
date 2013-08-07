@@ -123,10 +123,10 @@ end
 end
 
 class FootballTeam
-	attr_accessor :players, :rosterurl, :name
+	attr_accessor :players, :url, :name
 			
 	def getplayers
-		team_url = "http://espn.go.com/nfl/team/roster/_/name/dal/dallas-cowboys"
+		team_url = "http://espn.go.com/nfl/team/roster/_/name/nyg/new-york-giants"
 		@doc = Nokogiri::HTML(open("#{team_url}"))
 		
 		
@@ -142,9 +142,9 @@ class FootballTeam
 				newfootballplayer.name = playername
 				newfootballplayer.url = playerurl
 				newfootballplayer.getdata
-				puts newfootballplayer.name
-				puts newfootballplayer.position
-				puts newfootballplayer.nfl_team
+				#puts newfootballplayer.name
+				#puts newfootballplayer.position
+				#puts newfootballplayer.nfl_team
 				@players << newfootballplayer
 			end
 			
@@ -158,16 +158,28 @@ class Application
 	def getallteams
 	
 			@teams = []
+			@@teamlinks = [ "http://espn.go.com/nfl/team/roster/_/name/nyg/new-york-giants", "http://espn.go.com/nfl/team/roster/_/name/dal/dallas-cowboys", 
+				"http://espn.go.com/nfl/team/_/name/phi/philadelphia-eagles", "http://espn.go.com/nfl/team/roster/_/name/wsh/washington-redskins", 
+				"http://espn.go.com/nfl/team/roster/_/name/buf/buffalo-bills", "http://espn.go.com/nfl/team/roster/_/name/mia/miami-dolphins", 
+				"http://espn.go.com/nfl/team/roster/_/name/ne/new-england-patriots", "http://espn.go.com/nfl/team/roster/_/name/nyj/new-york-jets", 
+				"http://espn.go.com/nfl/team/roster/_/name/ari/arizona-cardinals", "http://espn.go.com/nfl/team/roster/_/name/sf/san-francisco-49ers", 
+				"http://espn.go.com/nfl/team/roster/_/name/sea/seattle-seahawks", "http://espn.go.com/nfl/team/roster/_/name/stl/st-louis-rams", 
+				"http://espn.go.com/nfl/team/roster/_/name/den/denver-broncos", "http://espn.go.com/nfl/team/roster/_/name/kc/kansas-city-chiefs", 
+				"http://espn.go.com/nfl/team/roster/_/name/oak/oakland-raiders", "http://espn.go.com/nfl/team/roster/_/name/sd/san-diego-chargers", 
+				"http://espn.go.com/nfl/team/roster/_/name/chi/chicago-bears", "http://espn.go.com/nfl/team/roster/_/name/det/detroit-lions", 
+				"http://espn.go.com/nfl/team/roster/_/name/gb/green-bay-packers", "http://espn.go.com/nfl/team/roster/_/name/min/minnesota-vikings", 
+				"http://espn.go.com/nfl/team/roster/_/name/bal/baltimore-ravens", "http://espn.go.com/nfl/team/roster/_/name/cin/cincinnati-bengals", 
+				"http://espn.go.com/nfl/team/roster/_/name/cle/cleveland-browns", "http://espn.go.com/nfl/team/roster/_/name/pit/pittsburgh-steelers",
+				"http://espn.go.com/nfl/team/roster/_/name/atl/atlanta-falcons", "http://espn.go.com/nfl/team/_/name/car/carolina-panthers", 
+				"http://espn.go.com/nfl/team/roster/_/name/no/new-orleans-saints", "http://espn.go.com/nfl/team/roster/_/name/tb/tampa-bay-buccaneers", 
+				"http://espn.go.com/nfl/team/roster/_/name/hou/houston-texans", "http://espn.go.com/nfl/team/roster/_/name/ind/indianapolis-colts", 
+				"http://espn.go.com/nfl/team/roster/_/name/jac/jacksonville-jaguars", "http://espn.go.com/nfl/team/roster/_/name/ten/tennessee-titans" ]
 			
-		league_url = "http://espn.go.com/nfl/teams"
-		@doc = Nokogiri::HTML(open("#{league_url}"))
-		@doc.css('.first .logo-nfl-medium-19 span:nth-child(2)').each do |data|
-			puts data
-			rosterurl = data.css("a")[2]["href"]
-			newurl = "http://espn.go.com" + rosterurl
-			
+			@@teamlinks.each do |newurl|
+
+
 				newfootballteam = FootballTeam.new
-				newfootballteam.url = newrurl
+				newfootballteam.url = newurl
 				newfootballteam.getplayers
 				@teams << newfootballteam
 			
@@ -179,4 +191,9 @@ end
 
 fantasyfootball = Application.new
 fantasyfootball.getallteams
-puts fantasyfootball.teams	
+@teams.each do |team|
+	puts team.players.length
+end
+#footballteam = FootballTeam.new
+#footballteam.getplayers
+#puts footballteam.name
